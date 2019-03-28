@@ -7,7 +7,7 @@ select  postalcode from Customers where postalcode = "1010";
 ## find the phone number for the supplier with the id 11. Should be (010) 9984510.
 select  phone from Suppliers where SupplierId= "11";
 ## list orders descending by the order date. The order with date 1997-02-12 should be at the top.
-
+SELECT * from [Orders] order by OrderDate desc;
 ## find all suppliers who have names longer than 20 characters. You can use `length(SupplierName)` to get the length of the name. Returns 11 records.
 SELECT * FROM [Suppliers] where length(SupplierName) > 20
 ## find all customers that include the word "market" in the name. Should return 4 records.
@@ -17,9 +17,10 @@ INSERT into Customers values ("92","The Shire","Bilbo Baggins"," Hobbit-Hole","B
 ## update _Bilbo Baggins_ record so that the postal code changes to _"11122"_.
 Update Customers set postalcode = "11122" where CustomerName Like "Bilbo Baggins" 
 ## list orders grouped by customer showing the number of orders per customer. _Rattlesnake Canyon Grocery_ should have 7 orders.
-
+select Customers.CustomerName, count(*) AS 'Orders Per Customer' from customers inner join orders on orders.customerId = customers.CustomerId group by customers.customerId
 ## list customers names and the number of orders per customer. Sort the list by number of orders in descending order. _Ernst Handel_ should be at the top with 10 orders followed by _QUICK-Stop_, _Rattlesnake Canyon Grocery_ and _Wartian Herkku_ with 7 orders each.
-
+select Customers.CustomerName, orders.orderId, count(orders.orderId) from customers INNER JOIN orders ON orders.customerId = customers.CustomerId group by customers.customerId order by count(orders.orderId) desc
 ## list orders grouped by customer's city showing number of orders per city. Returns 58 Records with _Aachen_ showing 2 orders and _Albuquerque_ showing 7 orders.
-
+select Customers.city, count(*) AS 'Orders Per City' from customers inner join orders on orders.customerId = customers.customerId group by city
 ## delete all users that have no orders. Should delete 17 (or 18 if you haven't deleted the record added) records.
+delete from Customers where not exists(select NULL from Orders where orders.customerId = Customers.CustomerId)
